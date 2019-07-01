@@ -1,5 +1,11 @@
 import pyodbc
 
+conn = pyodbc.connect(
+    "Driver={SQL Server};"
+    "Server=187.21.241.46;"
+    "Database=_teste;"
+    "uid=_teste;pwd=_teste")
+
 def read(conn):
     print("Read")
     cursor = conn.cursor()
@@ -7,15 +13,35 @@ def read(conn):
     for row in cursor:
         print(f'row = {row}')
 
-conn = pyodbc.connect(
-    "Driver={SQL Server Native Cliente 11.0;"
-    "Server=187.21.241.46;"
-    "Database=_teste;"
-    "Trusted_connection=yes;"
-)
+def create(conn):
+    print("Create")
+    cursor = conn.cursor()
+    cursor.execute(
+        'insert into dummy(a,b) values(?,?);',
+        (3232, 'Felipe')
+    )
+    conn.commit()
+    read(conn)
 
-read(conn)
-create(conn)
-update(conn)
-delete(conn)
+def update(conn):
+    print("Update")
+    cursor = conn.cursor()
+    cursor.execute(
+        'update dummy set b = ? where a = ?;',
+        ('dogzzz', 3232)
+    )
+    conn.commit()
+    read(conn)
+
+def delete(conn):
+    print("Update")
+    cursor = conn.cursor()
+    cursor.execute(
+        'delete from dummy where a > 5'
+    )
+    conn.commit()
+    read(conn)
+
+
+print(read(conn))
 
